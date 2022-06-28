@@ -11,6 +11,13 @@ app.get("/", (req, res) => {
   res.send("Hello!");
 });
 
+//ADDING_ROUTES
+app.get("/urls.json", (req, res) => {
+  res.json(urlDatabase);
+});
+
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}`);
 });
+
+//STOPPED_AT_TINYAPP:_OVERVIEW_&_SETUP_,_ADDING_ROUTES
