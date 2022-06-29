@@ -4,18 +4,19 @@ const PORT = 8080; //defauls port 8080
 
 app.set("view engine", "ejs");
 
+app.get("/", (req, res) => {
+  res.send("Hello!");
+});
+
 const urlDatabase = {
   b2xVn2: "http://www.lighthouselabs.ca",
   "9sm5xk": "http://www.googlt.com",
 };
 
-app.get("/", (req, res) => {
-  res.send("Hello!");
-});
-
 //ADDING_ROUTES
-app.get("/urls.json", (req, res) => {
-  res.json(urlDatabase);
+app.get("/urls", (req, res) => {
+  const templateVars = { urls: urlDatabase };
+  res.render("urls_index", templateVars);
 });
 
 //Sending HTML
