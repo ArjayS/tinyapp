@@ -20,7 +20,10 @@ app.get("/urls", (req, res) => {
 });
 
 app.get("/urls/:shortURL", (req, res) => {
-  const templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase };
+  const templateVars = {
+    shortURL: req.params.shortURL, //This is from the input of the :shortURL
+    longURL: urlDatabase[req.params.shortURL], // We are trying to access the object of urlDatabase within this file.
+  };
   res.render("urls_show", templateVars);
 });
 
