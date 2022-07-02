@@ -26,24 +26,28 @@ const urlDatabase = {
   "9sm5xk": "http://www.googlt.com",
 };
 
+const users = {};
+
 //ADDING_ROUTES
 app.get("/", (req, res) => {
   res.send("Hello!");
 });
 
 app.get("/urls", (req, res) => {
-  const templateVars = { urls: urlDatabase };
+  const templateVars = { urls: urlDatabase, username: req.cookies["username"] };
   res.render("urls_index", templateVars);
 });
 
 app.get("/urls/new", (req, res) => {
-  res.render("urls_new");
+  const templateVars = { username: req.cookies["username"] };
+  res.render("urls_new", templateVars);
 });
 
 app.get("/urls/:shortURL", (req, res) => {
   const templateVars = {
     shortURL: req.params.shortURL, //This is from the input of the :shortURL
     longURL: urlDatabase[req.params.shortURL], // We are trying to access the object of urlDatabase within this file.
+    username: req.cookies["username"],
   };
   // console.log(urlDatabase);// TO view any updates regarding the database
   res.render("urls_show", templateVars);
@@ -70,13 +74,19 @@ app.get("fetch", (req, res) => {
 });
 
 app.get("/login", (req, res) => {
-  // if (req.cookies.userId) {
-  //   res.redirect("/protected");
-  // }
   res.render("login");
 });
 
 //CREATING ROUTES
+
+app.post("/login", (req, res) => {
+  const { username } = req.body;
+
+  res.cookie("username", username);
+
+  res.redirect("/urls");
+});
+
 app.post("/urls", (req, res) => {
   const shortURL = generateRandomString();
   urlDatabase[shortURL] = req.body.longURL;
