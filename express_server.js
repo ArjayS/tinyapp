@@ -1,8 +1,10 @@
 const express = require("express");
 const app = express();
+const cookieParser = require("cookie-parser");
 const PORT = 8080; //defauls port 8080
 const bodyParser = require("body-parser");
 
+app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.set("view engine", "ejs");
@@ -43,7 +45,7 @@ app.get("/urls/:shortURL", (req, res) => {
     shortURL: req.params.shortURL, //This is from the input of the :shortURL
     longURL: urlDatabase[req.params.shortURL], // We are trying to access the object of urlDatabase within this file.
   };
-  console.log(urlDatabase);
+  // console.log(urlDatabase);// TO view any updates regarding the database
   res.render("urls_show", templateVars);
 });
 
@@ -67,11 +69,18 @@ app.get("fetch", (req, res) => {
   res.send(`a = ${a}`);
 });
 
+app.get("/login", (req, res) => {
+  // if (req.cookies.userId) {
+  //   res.redirect("/protected");
+  // }
+  res.render("login");
+});
+
 //CREATING ROUTES
 app.post("/urls", (req, res) => {
   const shortURL = generateRandomString();
   urlDatabase[shortURL] = req.body.longURL;
-  console.log(urlDatabase); // Log the POST request body to the console
+  // console.log(urlDatabase); // Log the POST request body to the console
   // res.send("Ok"); // Respond with 'Ok' (we will replace this)
   res.redirect(`/urls/${shortURL}`);
 });
@@ -93,4 +102,4 @@ app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}`);
 });
 
-console.log(generateRandomString());
+// console.log(generateRandomString()); //Check to see if the generateRandomString is generating a random string
