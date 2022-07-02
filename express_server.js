@@ -43,6 +43,7 @@ app.get("/urls/:shortURL", (req, res) => {
     shortURL: req.params.shortURL, //This is from the input of the :shortURL
     longURL: urlDatabase[req.params.shortURL], // We are trying to access the object of urlDatabase within this file.
   };
+  console.log(urlDatabase);
   res.render("urls_show", templateVars);
 });
 
@@ -75,13 +76,16 @@ app.post("/urls", (req, res) => {
   res.redirect(`/urls/${shortURL}`);
 });
 
+// For the Delete Feature
 app.post("/urls/:shortURL/delete", (req, res) => {
   delete urlDatabase[req.params.shortURL];
   res.redirect("/urls");
 });
 
+// For the Update Feature
 app.post("/urls/:shortURL", (req, res) => {
   shortURL = req.params.shortURL;
+  urlDatabase[shortURL] = req.body.longURL;
   res.redirect(`/urls/${shortURL}`);
 });
 
