@@ -23,11 +23,31 @@ function generateRandomString() {
 }
 
 const urlDatabase = {
-  // b2xVn2: "http://www.lighthouselabs.ca",
-  // "9sm5xk": "http://www.googlt.com",
+  b2xVn2: "http://www.lighthouselabs.ca",
+  "9sm5xk": "http://www.googlt.com",
 };
 
-const users = {};
+const users = {
+  userRandomID: {
+    id: "userRandomID",
+    email: "user@example.com",
+    password: "purple-monkey-dinosaur",
+  },
+  user2RandomID: {
+    id: "user2RandomID",
+    email: "user2@example.com",
+    password: "dishwasher-funk",
+  },
+};
+
+const getUserByID = (id) => {
+  for (const user in users) {
+    if (user === id) {
+      return users[user].email;
+    }
+  }
+  return null;
+};
 
 //ADDING_ROUTES
 app.get("/", (req, res) => {
@@ -35,20 +55,23 @@ app.get("/", (req, res) => {
 });
 
 app.get("/urls", (req, res) => {
-  const templateVars = { urls: urlDatabase, username: req.cookies["username"] };
+  const user = getUserByID(req.cookies.userId);
+  const templateVars = { urls: urlDatabase, user: user };
   res.render("urls_index", templateVars);
 });
 
 app.get("/urls/new", (req, res) => {
-  const templateVars = { username: req.cookies["username"] };
+  const user = getUserByID(req.cookies.userId);
+  const templateVars = { user: user };
   res.render("urls_new", templateVars);
 });
 
 app.get("/urls/:shortURL", (req, res) => {
+  const user = getUserByID(req.cookies.userId);
   const templateVars = {
     shortURL: req.params.shortURL, //This is from the input of the :shortURL
     longURL: urlDatabase[req.params.shortURL], // We are trying to access the object of urlDatabase within this file.
-    username: req.cookies["username"],
+    user: user,
   };
   // console.log(urlDatabase);// TO view any updates regarding the database
   res.render("urls_show", templateVars);
@@ -84,10 +107,57 @@ app.get("/login", (req, res) => {
 
 //CREATING ROUTES
 
-app.post("/login", (req, res) => {
-  const { username } = req.body;
+app.post("/register", (req, res) => {
+  const id = generateRandomString();
+  console.log(req.body);
+  const { email, password } = req.body;
 
-  res.cookie("username", username);
+  let foundUser;
+  for (const user in users) {
+    if (users[user].email === email) {
+      foundUser = users[user];
+    }
+  }
+
+  const newUser = {
+    id,
+    email,
+    password,
+  };
+  users[id] = newUser;
+
+  if (newUser.email === "" || newUser.password === "") {
+    res.status(400).send("Please Provide your login information");
+  } else if (foundUser) {
+    return res.status(400).send("A user with that email already exists");
+  }
+
+  res.cookie("userId", newUser.id);
+
+  res.redirect("/urls");
+});
+
+app.post("/login", (req, res) => {
+  const { email, password } = req.body;
+
+  let foundUser;
+  for (const userId in users) {
+    if (users[userId].email === email) {
+      foundUser = users[userId];
+    }
+  }
+
+  if (!foundUser) {
+    return res.status(400).send("No user with that email found");
+  }
+
+  if (foundUser.password !== password) {
+    return res.status(400).send("Incorrect Password");
+  }
+
+  res.cookie("userId", foundUser.id);
+  // res.cookie("username", username);
+  console.log(foundUser.id);
 
   res.redirect("/urls");
 });
@@ -114,7 +184,7 @@ app.post("/urls/:shortURL", (req, res) => {
 });
 
 app.post("/logout", (req, res) => {
-  res.clearCookie("username");
+  res.clearCookie("user");
   res.redirect("/urls");
 });
 
