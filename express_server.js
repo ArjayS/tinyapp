@@ -148,15 +148,14 @@ app.post("/login", (req, res) => {
   }
 
   if (!foundUser) {
-    return res.status(400).send("No user with that email found");
+    return res.status(403).send("No user with that email found");
   }
 
   if (foundUser.password !== password) {
-    return res.status(400).send("Incorrect Password");
+    return res.status(403).send("Incorrect Password");
   }
 
   res.cookie("userId", foundUser.id);
-  // res.cookie("username", username);
   console.log(foundUser.id);
 
   res.redirect("/urls");
@@ -184,8 +183,8 @@ app.post("/urls/:shortURL", (req, res) => {
 });
 
 app.post("/logout", (req, res) => {
-  res.clearCookie("user");
-  res.redirect("/urls");
+  res.clearCookie("userId");
+  res.redirect("/login");
 });
 
 app.listen(PORT, () => {
