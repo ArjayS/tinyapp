@@ -22,8 +22,8 @@ function generateRandomString() {
 }
 
 const urlDatabase = {
-  b2xVn2: "http://www.lighthouselabs.ca",
-  "9sm5xk": "http://www.googlt.com",
+  // b2xVn2: "http://www.lighthouselabs.ca",
+  // "9sm5xk": "http://www.googlt.com",
 };
 
 const users = {};
@@ -106,6 +106,11 @@ app.post("/urls/:shortURL", (req, res) => {
   shortURL = req.params.shortURL;
   urlDatabase[shortURL] = req.body.longURL;
   res.redirect(`/urls/${shortURL}`);
+});
+
+app.post("/logout", (req, res) => {
+  res.clearCookie("username");
+  res.redirect("/urls");
 });
 
 app.listen(PORT, () => {
