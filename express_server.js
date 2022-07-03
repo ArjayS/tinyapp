@@ -6,6 +6,7 @@ const bodyParser = require("body-parser");
 
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: false }));
 
 app.set("view engine", "ejs");
 
@@ -71,6 +72,10 @@ app.get("/set", (req, res) => {
 
 app.get("fetch", (req, res) => {
   res.send(`a = ${a}`);
+});
+
+app.get("/register", (req, res) => {
+  res.render("register");
 });
 
 app.get("/login", (req, res) => {
