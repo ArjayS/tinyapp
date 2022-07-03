@@ -16,14 +16,14 @@
       <div class="navbar-nav">
         <a class="nav-item nav-link" href="/urls">My URLs</a>
         <a class="nav-item nav-link" href="/urls/new">Create New URL</a>
-        <% if(username){ %>
-        <p>Logged In As: <%= username %>!</p>
+        <% if(user){ %>
+        <p>Logged In As:<%= user %>!</p>
         <form method="POST" action="/logout">
           <button type="submit">Logout</button>
         </form>
         <% } else { %>
         <form method="POST" action="/login">
-          <input name="username" placeholder="What is your username?" />
+          <input name="user" placeholder="What is your username?" />
           <button type="submit">Login</button>
         </form>
         <% } %>
