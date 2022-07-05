@@ -23,9 +23,29 @@ function generateRandomString() {
 }
 
 const urlDatabase = {
-  b2xVn2: "http://www.lighthouselabs.ca",
-  "9sm5xk": "http://www.googlt.com",
+  b2xVn2: {
+    longURL: "http://www.lighthouselabs.ca",
+    userID: "Pe3Xvn",
+  },
+  "9sm5xk": {
+    longURL: "http://www.googlt.com",
+    userID: "Pe3Xvn",
+  },
+  b6UTxQ: {
+    longURL: "https://www.tsn.ca",
+    userID: "aJ481W",
+  },
+  i3BoGr: {
+    longURL: "http://www.google.ca",
+    userID: "aJ481W",
+  },
 };
+
+/* 
+urlDatabase.b2xVn2 = "http://www.lighthouselabs.ca"
+urlDatabase[key] = error
+urlDatabase.b6UTxQ.longURL = "https://www.tsn.ca"
+*/
 
 const users = {
   userRandomID: {
@@ -60,31 +80,46 @@ app.get("/urls", (req, res) => {
   res.render("urls_index", templateVars);
 });
 
+//This route creates a new url
 app.get("/urls/new", (req, res) => {
   const user = getUserByID(req.cookies.userId);
   const templateVars = { user: user };
-  res.render("urls_new", templateVars);
+  if (!user) {
+    res.redirect("/login");
+  } else {
+    res.render("urls_new", templateVars);
+  }
 });
 
+//Edit page
 app.get("/urls/:shortURL", (req, res) => {
   const user = getUserByID(req.cookies.userId);
-  const templateVars = {
-    shortURL: req.params.shortURL, //This is from the input of the :shortURL
-    longURL: urlDatabase[req.params.shortURL], // We are trying to access the object of urlDatabase within this file.
-    user: user,
-  };
+  if (urlDatabase[req.params.shortURL].userID === req.cookies["userID"]) {
+    const templateVars = {
+      shortURL: req.params.shortURL, //This is from the input of the :shortURL
+      longURL: urlDatabase[req.params.shortURL].longURL, // We are trying to access the object of urlDatabase within this file.
+      user: user,
+    };
+    res.render("urls_show", templateVars);
+  } else {
+    res.status(400).send("Not permitted to edit!");
+  }
   // console.log(urlDatabase);// TO view any updates regarding the database
-  res.render("urls_show", templateVars);
 });
 
+//redirecting users to long URL using the shortened URL version
 app.get("/u/:shortURL", (req, res) => {
-  const longURL = urlDatabase[req.params.shortURL];
-  res.redirect(longURL);
+  if (urlDatabase[req.params.shortURL]) {
+    const longURL = urlDatabase[req.params.shortURL].longURL;
+    res.redirect(longURL);
+  } else {
+    res.status(400).send("That link does not exist!");
+  }
 });
 
 //Sending HTML
 app.get("/hello", (req, res) => {
-  res.send("<html><body>Hello <b>World</b></body></html>\n");
+  res.send("<html><body>Hello<b>World</b></body></html>\n");
 });
 
 //Variables
@@ -107,6 +142,7 @@ app.get("/login", (req, res) => {
 
 //CREATING ROUTES
 
+//For registering a new account
 app.post("/register", (req, res) => {
   const id = generateRandomString();
   console.log(req.body);
@@ -137,6 +173,7 @@ app.post("/register", (req, res) => {
   res.redirect("/urls");
 });
 
+//For logging In
 app.post("/login", (req, res) => {
   const { email, password } = req.body;
 
@@ -161,27 +198,41 @@ app.post("/login", (req, res) => {
   res.redirect("/urls");
 });
 
+//For the main urls page
 app.post("/urls", (req, res) => {
+  const longURL = req.body.longURL;
+  const userID = req.cookies["userID"];
   const shortURL = generateRandomString();
-  urlDatabase[shortURL] = req.body.longURL;
-  // console.log(urlDatabase); // Log the POST request body to the console
-  // res.send("Ok"); // Respond with 'Ok' (we will replace this)
+  urlDatabase[shortURL] = { longURL, userID };
+  console.log(urlDatabase);
+  if (!req.cookies.userId) {
+    return res.status(403).send("Error");
+  }
   res.redirect(`/urls/${shortURL}`);
 });
 
-// For the Delete Feature
+// For the delete Feature
 app.post("/urls/:shortURL/delete", (req, res) => {
-  delete urlDatabase[req.params.shortURL];
-  res.redirect("/urls");
+  if (urlDatabase[req.params.shortURL].userID === req.cookies["userID"]) {
+    delete urlDatabase[req.params.shortURL];
+    res.redirect("/urls");
+  } else {
+    res.status(403).send("Not permitted to delete!");
+  }
 });
 
-// For the Update Feature
+// For the EDIT / update Feature
 app.post("/urls/:shortURL", (req, res) => {
-  shortURL = req.params.shortURL;
-  urlDatabase[shortURL] = req.body.longURL;
-  res.redirect(`/urls/${shortURL}`);
+  if (urlDatabase[req.params.shortURL].userID === req.cookies["userID"]) {
+    shortURL = req.params.shortURL;
+    urlDatabase[shortURL].longURL = req.body.longURL; // LN204, urlDatabase[shortURL].longURL = LN 92, urlDatabase[req.params.shortURL].longURL,
+    res.redirect(`/urls`);
+  } else {
+    res.status(403).send("Not permitted");
+  }
 });
 
+//For logging out
 app.post("/logout", (req, res) => {
   res.clearCookie("userId");
   res.redirect("/login");
