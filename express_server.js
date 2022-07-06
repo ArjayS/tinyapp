@@ -60,7 +60,7 @@ const users = {
   },
 };
 
-const getUserByID = (id) => {
+const getUserByEmail = (id) => {
   for (const user in users) {
     if (user === id) {
       return users[user].email;
@@ -69,20 +69,31 @@ const getUserByID = (id) => {
   return null;
 };
 
+const urlsForUser = (id) => {
+  const urls = {};
+  for (const shortURL in urlDatabase) {
+    if (urlDatabase[shortURL].userID === id) {
+      urls[shortURL] = urlDatabase[shortURL];
+    }
+  }
+  return urls;
+};
+
 //ADDING_ROUTES
 app.get("/", (req, res) => {
   res.send("Hello!");
 });
 
 app.get("/urls", (req, res) => {
-  const user = getUserByID(req.cookies.userId);
-  const templateVars = { urls: urlDatabase, user: user };
+  const urlUser = urlsForUser(req.cookies.userId);
+  const user = getUserByEmail(req.cookies.userId);
+  const templateVars = { urls: urlUser, user: user };
   res.render("urls_index", templateVars);
 });
 
 //This route creates a new url
 app.get("/urls/new", (req, res) => {
-  const user = getUserByID(req.cookies.userId);
+  const user = getUserByEmail(req.cookies.userId);
   const templateVars = { user: user };
   if (!user) {
     res.redirect("/login");
@@ -93,8 +104,8 @@ app.get("/urls/new", (req, res) => {
 
 //Edit page
 app.get("/urls/:shortURL", (req, res) => {
-  const user = getUserByID(req.cookies.userId);
-  if (urlDatabase[req.params.shortURL].userID === req.cookies["userID"]) {
+  const user = getUserByEmail(req.cookies.userId);
+  if (urlDatabase[req.params.shortURL].userID === req.cookies.userId) {
     const templateVars = {
       shortURL: req.params.shortURL, //This is from the input of the :shortURL
       longURL: urlDatabase[req.params.shortURL].longURL, // We are trying to access the object of urlDatabase within this file.
@@ -109,11 +120,11 @@ app.get("/urls/:shortURL", (req, res) => {
 
 //redirecting users to long URL using the shortened URL version
 app.get("/u/:shortURL", (req, res) => {
-  if (urlDatabase[req.params.shortURL]) {
+  if (urlDatabase[req.params.shortURL].longURL) {
     const longURL = urlDatabase[req.params.shortURL].longURL;
     res.redirect(longURL);
   } else {
-    res.status(400).send("That link does not exist!");
+    res.status(400).send("No associated link with that shortURL!");
   }
 });
 
@@ -201,10 +212,9 @@ app.post("/login", (req, res) => {
 //For the main urls page
 app.post("/urls", (req, res) => {
   const longURL = req.body.longURL;
-  const userID = req.cookies["userID"];
+  const userID = req.cookies.userId;
   const shortURL = generateRandomString();
   urlDatabase[shortURL] = { longURL, userID };
-  console.log(urlDatabase);
   if (!req.cookies.userId) {
     return res.status(403).send("Error");
   }
@@ -213,7 +223,7 @@ app.post("/urls", (req, res) => {
 
 // For the delete Feature
 app.post("/urls/:shortURL/delete", (req, res) => {
-  if (urlDatabase[req.params.shortURL].userID === req.cookies["userID"]) {
+  if (urlDatabase[req.params.shortURL].userID === req.cookies.userId) {
     delete urlDatabase[req.params.shortURL];
     res.redirect("/urls");
   } else {
@@ -223,7 +233,7 @@ app.post("/urls/:shortURL/delete", (req, res) => {
 
 // For the EDIT / update Feature
 app.post("/urls/:shortURL", (req, res) => {
-  if (urlDatabase[req.params.shortURL].userID === req.cookies["userID"]) {
+  if (urlDatabase[req.params.shortURL].userID === req.cookies.userId) {
     shortURL = req.params.shortURL;
     urlDatabase[shortURL].longURL = req.body.longURL; // LN204, urlDatabase[shortURL].longURL = LN 92, urlDatabase[req.params.shortURL].longURL,
     res.redirect(`/urls`);
