@@ -1,11 +1,18 @@
 const express = require("express");
 const app = express();
-const cookieParser = require("cookie-parser");
+// const cookieParser = require("cookie-parser");
+const cookieSession = require("cookie-session");
 const bcrypt = require("bcryptjs");
 const PORT = 8080; //defauls port 8080
 const bodyParser = require("body-parser");
 
-app.use(cookieParser());
+app.use(
+  cookieSession({
+    name: "session",
+    keys: ["omegasecretinfo"],
+  })
+);
+// app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.urlencoded({ extended: false }));
 
@@ -86,15 +93,18 @@ app.get("/", (req, res) => {
 });
 
 app.get("/urls", (req, res) => {
-  const urlUser = urlsForUser(req.cookies.userId);
-  const user = getUserByEmail(req.cookies.userId);
+  const urlUser = urlsForUser(req.session.userId);
+  const user = getUserByEmail(req.session.userId);
+  // const urlUser = urlsForUser(req.cookies.userId);
+  // const user = getUserByEmail(req.cookies.userId);
   const templateVars = { urls: urlUser, user: user };
   res.render("urls_index", templateVars);
 });
 
 //This route creates a new url
 app.get("/urls/new", (req, res) => {
-  const user = getUserByEmail(req.cookies.userId);
+  const user = getUserByEmail(req.session.userId);
+  // const user = getUserByEmail(req.cookies.userId);
   const templateVars = { user: user };
   if (!user) {
     res.redirect("/login");
@@ -105,8 +115,9 @@ app.get("/urls/new", (req, res) => {
 
 //Edit page
 app.get("/urls/:shortURL", (req, res) => {
-  const user = getUserByEmail(req.cookies.userId);
-  if (urlDatabase[req.params.shortURL].userID === req.cookies.userId) {
+  const user = getUserByEmail(req.session.userId);
+  // const user = getUserByEmail(req.cookies.userId);
+  if (urlDatabase[req.params.shortURL].userID === req.session.userId) {
     const templateVars = {
       shortURL: req.params.shortURL, //This is from the input of the :shortURL
       longURL: urlDatabase[req.params.shortURL].longURL, // We are trying to access the object of urlDatabase within this file.
@@ -183,7 +194,8 @@ app.post("/register", (req, res) => {
     return res.status(400).send("A user with that email already exists");
   }
 
-  res.cookie("userId", newUser.id);
+  req.session.userId = newUser.id;
+  // res.cookie("userId", newUser.id);
 
   res.redirect("/urls");
 });
@@ -207,7 +219,8 @@ app.post("/login", (req, res) => {
     return res.status(403).send("Incorrect Password");
   }
 
-  res.cookie("userId", foundUser.id);
+  req.session.userId = foundUser.id;
+  // res.cookie("userId", foundUser.id);
   console.log(foundUser.id);
 
   res.redirect("/urls");
@@ -216,10 +229,11 @@ app.post("/login", (req, res) => {
 //For the main urls page
 app.post("/urls", (req, res) => {
   const longURL = req.body.longURL;
-  const userID = req.cookies.userId;
+  const userID = req.session.userId;
+  // const userID = req.cookies.userId;
   const shortURL = generateRandomString();
   urlDatabase[shortURL] = { longURL, userID };
-  if (!req.cookies.userId) {
+  if (!req.session.userId) {
     return res.status(403).send("Error");
   }
   res.redirect(`/urls/${shortURL}`);
@@ -227,7 +241,7 @@ app.post("/urls", (req, res) => {
 
 // For the delete Feature
 app.post("/urls/:shortURL/delete", (req, res) => {
-  if (urlDatabase[req.params.shortURL].userID === req.cookies.userId) {
+  if (urlDatabase[req.params.shortURL].userID === req.session.userId) {
     delete urlDatabase[req.params.shortURL];
     res.redirect("/urls");
   } else {
@@ -237,7 +251,7 @@ app.post("/urls/:shortURL/delete", (req, res) => {
 
 // For the EDIT / update Feature
 app.post("/urls/:shortURL", (req, res) => {
-  if (urlDatabase[req.params.shortURL].userID === req.cookies.userId) {
+  if (urlDatabase[req.params.shortURL].userID === req.session.userId) {
     shortURL = req.params.shortURL;
     urlDatabase[shortURL].longURL = req.body.longURL; // LN204, urlDatabase[shortURL].longURL = LN 92, urlDatabase[req.params.shortURL].longURL,
     res.redirect(`/urls`);
