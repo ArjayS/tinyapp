@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 const cookieParser = require("cookie-parser");
+const bcrypt = require("bcryptjs");
 const PORT = 8080; //defauls port 8080
 const bodyParser = require("body-parser");
 
@@ -156,8 +157,9 @@ app.get("/login", (req, res) => {
 //For registering a new account
 app.post("/register", (req, res) => {
   const id = generateRandomString();
-  console.log(req.body);
+  // console.log(req.body);
   const { email, password } = req.body;
+  const salt = bcrypt.genSaltSync();
 
   let foundUser;
   for (const user in users) {
@@ -169,9 +171,11 @@ app.post("/register", (req, res) => {
   const newUser = {
     id,
     email,
-    password,
+    password: bcrypt.hashSync(password, salt), //Around 15 minute mark
   };
   users[id] = newUser;
+
+  console.log(users);
 
   if (newUser.email === "" || newUser.password === "") {
     res.status(400).send("Please Provide your login information");
@@ -199,7 +203,7 @@ app.post("/login", (req, res) => {
     return res.status(403).send("No user with that email found");
   }
 
-  if (foundUser.password !== password) {
+  if (!bcrypt.compareSync(password, foundUser.password)) {
     return res.status(403).send("Incorrect Password");
   }
 
