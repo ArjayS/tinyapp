@@ -262,7 +262,8 @@ app.post("/urls/:shortURL", (req, res) => {
 
 //For logging out
 app.post("/logout", (req, res) => {
-  res.clearCookie("userId");
+  req.session = null;
+  // res.clearCookie("userId");
   res.redirect("/login");
 });
 
