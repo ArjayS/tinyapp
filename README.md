@@ -6,22 +6,30 @@ Hi! to whoever is visiting, This version of TinyApp was made by Robert Servado a
 
 ## Final Product
 
-!["Registering your account"](https://github.com/ArjayS/tinyapp/blob/master/docs/tinyApp_registration.PNG?raw=true)
 <strong> Registering your account </strong>
+!["Registering your account"](https://github.com/ArjayS/tinyapp/blob/master/docs/tinyApp_registration.PNG?raw=true)
 
-| Excerpts from Romeo and Juliet (arr. V. Borisovsky) |
+<p></p>
 
-!["My URL's page"](https://github.com/ArjayS/tinyapp/blob/master/docs/tinyApp_myUrl.PNG?raw=true)
 <strong> My Url's page </strong>
+!["My URL's page"](https://github.com/ArjayS/tinyapp/blob/master/docs/tinyApp_myUrl.PNG?raw=true)
 
-!["Creating a new tiny URL"](https://github.com/ArjayS/tinyapp/blob/master/docs/tinyApp_creatingNewUrl.PNG?raw=true)
+<p></p>
+
 <strong> Creating a new tiny URL </strong>
+!["Creating a new tiny URL"](https://github.com/ArjayS/tinyapp/blob/master/docs/tinyApp_creatingNewUrl.PNG?raw=true)
 
-!["Editing your tiny URL"](https://github.com/ArjayS/tinyapp/blob/master/docs/tinyApp_editingExistingUrl.PNG?raw=true)
+<p></p>
+
 <strong> Editing your tiny URL </strong>
+!["Editing your tiny URL"](https://github.com/ArjayS/tinyapp/blob/master/docs/tinyApp_editingExistingUrl.PNG?raw=true)
 
-!["After logging out, you will be redirected to the login page"](https://github.com/ArjayS/tinyapp/blob/master/docs/tinyApp_login.PNG?raw=true)
+<p></p>
+
 <strong> Login Page </strong>
+!["After logging out, you will be redirected to the login page"](https://github.com/ArjayS/tinyapp/blob/master/docs/tinyApp_login.PNG?raw=true)
+
+<p></p>
 
 ## Dependencies
 
