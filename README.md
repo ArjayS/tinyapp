@@ -6,30 +6,20 @@ Hi! to whoever is visiting, This version of TinyApp was made by Robert Servado a
 
 ## Final Product
 
-<strong> Registering your account </strong>
+###<strong> Registering your account </strong>
 !["Registering your account"](https://github.com/ArjayS/tinyapp/blob/master/docs/tinyApp_registration.PNG?raw=true)
 
-<p></p>
-
-<strong> My Url's page </strong>
+###<strong> My Url's page </strong>
 !["My URL's page"](https://github.com/ArjayS/tinyapp/blob/master/docs/tinyApp_myUrl.PNG?raw=true)
 
-<p></p>
-
-<strong> Creating a new tiny URL </strong>
+###<strong> Creating a new tiny URL </strong>
 !["Creating a new tiny URL"](https://github.com/ArjayS/tinyapp/blob/master/docs/tinyApp_creatingNewUrl.PNG?raw=true)
 
-<p></p>
-
-<strong> Editing your tiny URL </strong>
+###<strong> Editing your tiny URL </strong>
 !["Editing your tiny URL"](https://github.com/ArjayS/tinyapp/blob/master/docs/tinyApp_editingExistingUrl.PNG?raw=true)
 
-<p></p>
-
-<strong> Login Page </strong>
+###<strong> Login Page </strong>
 !["After logging out, you will be redirected to the login page"](https://github.com/ArjayS/tinyapp/blob/master/docs/tinyApp_login.PNG?raw=true)
-
-<p></p>
 
 ## Dependencies
 
