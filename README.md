@@ -9,7 +9,7 @@ Hi! to whoever is visiting, This version of TinyApp was made by Robert Servado a
 | !["Registering your account"](https://github.com/ArjayS/tinyapp/blob/master/docs/tinyApp_registration.PNG?raw=true) |
 | :-----------------------------------------------------------------------------------------------------------------: |
 
-| <b> Oh look at that a very monochromatic registration page. Don't worry it will be more vibrant soon!
+| <b> Oh look at that a very monochromatic registration page. Don't worry it will be more vibrant soon! </b>|
 
 !["My URL's page"](https://github.com/ArjayS/tinyapp/blob/master/docs/tinyApp_myUrl.PNG?raw=true)
 !["Creating a new tiny URL"](https://github.com/ArjayS/tinyapp/blob/master/docs/tinyApp_creatingNewUrl.PNG?raw=true)
