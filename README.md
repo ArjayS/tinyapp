@@ -9,6 +9,8 @@ Hi! to whoever is visiting, This version of TinyApp was made by Robert Servado a
 !["Registering your account"](https://github.com/ArjayS/tinyapp/blob/master/docs/tinyApp_registration.PNG?raw=true)
 <strong> Registering your account </strong>
 
+| Excerpts from Romeo and Juliet (arr. V. Borisovsky) |
+
 !["My URL's page"](https://github.com/ArjayS/tinyapp/blob/master/docs/tinyApp_myUrl.PNG?raw=true)
 <strong> My Url's page </strong>
 
