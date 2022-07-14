@@ -1,9 +1,10 @@
 //Function for generating a Random String
 function generateRandomString() {
+  const stringLength = 6;
   let result = "";
   const characters =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  for (let i = 0; i < 6; i++) {
+  for (let i = 0; i < stringLength; i++) {
     result += characters.charAt(Math.floor(Math.random() * characters.length));
   }
   return result;
@@ -19,26 +20,24 @@ const urlsForUser = (id, database) => {
   return urls;
 };
 
-const findEmailbyId = (id, database) => {
+const findEmailById = (id, database) => {
   for (const user in database) {
     if (user === id) {
       return database[user].email;
     }
   }
-  return null;
 };
 
-const getUserByEmail = (email, db) => {
-  for (let key in db) {
-    if (db[key].email === email) {
-      return db[key];
+const getUserByEmail = (email, database) => {
+  for (const key in database) {
+    if (email === database[key].email) {
+      return database[key];
     }
   }
-  return undefined;
 };
 
 module.exports = {
-  findEmailbyId,
+  findEmailById,
   getUserByEmail,
   generateRandomString,
   urlsForUser,
