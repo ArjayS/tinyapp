@@ -26,9 +26,9 @@ Hi! to whoever is visiting, This version of TinyApp was made by Robert Servado a
 
 !["After logging out, you will be redirected to the login page"](https://github.com/ArjayS/tinyapp/blob/master/docs/tinyApp_login.PNG?raw=true)
 
-### A GIF demonstration for Tiny App
+### A Video demonstration for Tiny App
 
-![GIF demonstration of my version of Tiny App](https://github.com/ArjayS/tinyapp/blob/master/docs/tinyApp_gif.gif)
+![Video demonstration of my version of Tiny App](https://github.com/ArjayS/tinyapp/blob/master/docs/tinyAppVideo.mp4)
 
 ## Dependencies
 
